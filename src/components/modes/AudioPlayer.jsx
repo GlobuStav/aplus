@@ -47,7 +47,7 @@ export default function AudioPlayer() {
   return (
     <div className="space-y-5 fade-up">
       {/* Player card */}
-      <div className="bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-700 rounded-3xl p-7 text-white shadow-2xl shadow-indigo-200">
+      <div className="bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-700 rounded-3xl p-5 sm:p-7 text-white shadow-2xl shadow-indigo-200">
         {/* Waveform */}
         <div className="flex items-end justify-center gap-px h-14 mb-6">
           {WAVE.map((h, i) => {

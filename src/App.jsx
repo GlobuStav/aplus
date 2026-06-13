@@ -24,7 +24,10 @@ export default function App() {
   const [subject, setSubject] = useState("chemistry");
   const [tab, setTab] = useState("text");
   const [showQuiz, setShowQuiz] = useState(false);
-  const [sidebar, setSidebar] = useState(true);
+  // Sidebar starts open on desktop, closed on phones (where it's an overlay drawer).
+  const [sidebar, setSidebar] = useState(() =>
+    typeof window === "undefined" ? true : window.innerWidth >= 1024
+  );
 
   const ActiveMode = TABS.find((t) => t.id === tab).Component;
 
@@ -32,18 +35,25 @@ export default function App() {
     setSubject(id);
     setShowQuiz(false);
     setTab("text");
+    // On phones the drawer overlays content, so close it after a pick.
+    if (window.innerWidth < 1024) setSidebar(false);
   };
 
   return (
     <div className="flex h-screen overflow-hidden" dir="rtl">
-      <Sidebar open={sidebar} activeSubject={subject} onSelectSubject={handleSelectSubject} />
+      <Sidebar
+        open={sidebar}
+        activeSubject={subject}
+        onSelectSubject={handleSelectSubject}
+        onClose={() => setSidebar(false)}
+      />
 
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header onToggleSidebar={() => setSidebar((s) => !s)} />
 
         {/* Scrollable workspace */}
         <div className="flex-1 overflow-y-auto bg-slate-50">
-          <div className="max-w-4xl mx-auto px-5 py-8 space-y-7">
+          <div className="max-w-4xl mx-auto px-3 sm:px-5 py-5 sm:py-8 space-y-5 sm:space-y-7">
             <TopicHero />
 
             {!showQuiz && <QuizBanner onStart={() => setShowQuiz(true)} />}
@@ -51,7 +61,7 @@ export default function App() {
             {showQuiz ? (
               /* Quiz panel */
               <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
-                <div className="bg-gradient-to-l from-amber-500 to-orange-600 px-7 py-5 flex items-center justify-between">
+                <div className="bg-gradient-to-l from-amber-500 to-orange-600 px-4 sm:px-7 py-4 sm:py-5 flex items-center justify-between">
                   <h3 className="font-bold text-white text-lg flex items-center gap-2">
                     <Trophy size={19} />
                     מבחן תרגול
@@ -64,7 +74,7 @@ export default function App() {
                     <X size={20} />
                   </button>
                 </div>
-                <div className="p-7">
+                <div className="p-4 sm:p-7">
                   <Quiz onClose={() => setShowQuiz(false)} />
                 </div>
               </div>
@@ -95,7 +105,7 @@ export default function App() {
                   </div>
                 </div>
                 {/* Active mode */}
-                <div className="p-7">
+                <div className="p-4 sm:p-7">
                   <ActiveMode />
                 </div>
               </div>
