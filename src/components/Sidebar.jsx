@@ -1,12 +1,24 @@
 import { Star } from "lucide-react";
 import { SUBJECTS } from "../data/subjects";
 
-/** Left (RTL: right) sidebar — logo, subject list, last-score widget. */
-export default function Sidebar({ open, activeSubject, onSelectSubject }) {
+/** Left (RTL: right) sidebar — logo, subject list, last-score widget.
+ *  Desktop: a static column that collapses its width.
+ *  Phone:   an off-canvas drawer that slides in over the content. */
+export default function Sidebar({ open, activeSubject, onSelectSubject, onClose }) {
   return (
+    <>
+      {/* Mobile backdrop */}
+      {open && (
+        <div
+          onClick={onClose}
+          className="fixed inset-0 z-30 bg-slate-900/40 backdrop-blur-sm lg:hidden"
+          aria-hidden="true"
+        />
+      )}
+
     <aside
-      className={`flex-shrink-0 bg-white border-l border-slate-100 flex flex-col shadow-sm overflow-hidden transition-all duration-300 ${
-        open ? "w-64" : "w-0"
+      className={`fixed lg:static inset-y-0 right-0 z-40 w-64 flex-shrink-0 bg-white border-l border-slate-100 flex flex-col shadow-sm overflow-hidden transition-all duration-300 ${
+        open ? "translate-x-0 lg:w-64" : "translate-x-full lg:translate-x-0 lg:w-0"
       }`}
     >
       {/* Logo */}
@@ -60,5 +72,6 @@ export default function Sidebar({ open, activeSubject, onSelectSubject }) {
         </div>
       </div>
     </aside>
+    </>
   );
 }
